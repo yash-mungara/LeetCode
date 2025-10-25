@@ -1,28 +1,23 @@
 class Solution {
 public:
+    double helper(double x, long long n) {
+        if (n == 0) return 1.0;
+
+        double half = helper(x, n / 2);
+
+        if (n % 2 == 0)
+            return half * half;
+        else
+            return half * half * x;
+    }
+
     double myPow(double x, int n) {
-        double y = 1 , z = x;
-        long k = n;
-        if(k<0){
-            k *= -1;
-        while(k>0){
-            if(k%2==1){
-                y *= z;
-            }
-            z *= z;
-            k /= 2;
+        long long N = n; // use long long to handle n = INT_MIN safely
+        if (N < 0) {
+            x = 1 / x;
+            N = -N;
         }
-        y = 1/y;
-        }
-        else{
-            while(k>0){
-            if(k%2==1){
-                y *= z;
-            }
-            z *= z;
-            k /= 2;
-            }
-        }
-    return y;
+        return helper(x, N);
     }
 };
+
