@@ -1,0 +1,20 @@
+class Solution {
+public:
+    const long long MOD = 1e9 + 7;
+
+    long long power(long long x, long long n) {
+        if (n == 0) return 1;
+        long long half = power(x, n / 2);
+        long long res = (half * half) % MOD;
+        if (n % 2 == 1)
+            res = (res * x) % MOD;
+        return res;
+    }
+
+    int countGoodNumbers(long long n) {
+        long long even = (n + 1) / 2;  // positions where even digits can be placed
+        long long odd = n / 2;         // positions where odd digits (prime positions) can be placed
+        return (power(5, even) * power(4, odd)) % MOD;
+    }
+};
+
