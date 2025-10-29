@@ -1,20 +1,24 @@
 class Solution {
 public:
-    const long long MOD = 1e9 + 7;
-
-    long long power(long long x, long long n) {
-        if (n == 0) return 1;
-        long long half = power(x, n / 2);
-        long long res = (half * half) % MOD;
-        if (n % 2 == 1)
-            res = (res * x) % MOD;
-        return res;
+    long long m = 1e9 + 7;
+    long long helper(long long x, long long n, long long base){
+        if(n==0) return 1;
+        long long  ans = helper(x,n/2,base);
+        ans = (ans*ans)%m;
+        if(n%2!=0) ans = (ans*base)%m;
+        return ans;
     }
-
+    long long myPow(long long x, long long N) {
+        if(N<0) {x= 1/x;N=N*-1;}
+        long long ans = helper(x,N,x);
+        return ans;
+    }
+    
     int countGoodNumbers(long long n) {
-        long long even = (n + 1) / 2;  // positions where even digits can be placed
-        long long odd = n / 2;         // positions where odd digits (prime positions) can be placed
-        return (power(5, even) * power(4, odd)) % MOD;
+        long long even = (n+1)/2;
+        long long odd = n/2;
+        long long ans = 0;
+        ans = (myPow(4,odd)*myPow(5,even))%m;
+        return (int)ans;
     }
 };
-
