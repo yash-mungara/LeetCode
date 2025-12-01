@@ -1,38 +1,50 @@
 class Solution {
 public:
-    bool issafe(vector<string> &board,int r,int j, int n){
-        for(int i=0;i<n;i++){
-            if(board[r][i]=='Q')return false;
+    bool issafe(int row, int clm, vector<string> board, int n){
+        int a=row;
+        int b=clm;
+
+        while(row>=0 && clm>=0){
+            if(board[row][clm]=='Q') return false;
+            row--; clm--;
         }
-        for(int i=0;i<n;i++){
-            if(board[i][j]=='Q')return false;
+
+        row=a; clm=b;
+
+        while(row<n && clm>=0){
+            if(board[row][clm]=='Q') return false;
+            row++; clm--;
         }
-        for(int p=r,q=j;p>=0 && q>=0;p--,q--){
-            if(board[p][q]=='Q')return false;
-        }
-        for(int p=r,q=j;p>=0 && q<n;p--,q++){
-            if(board[p][q]=='Q')return false;
+
+        while(b>=0){
+            if(board[a][b]=='Q') return false;
+            b--;
         }
         return true;
     }
-    void nqueens(vector<string> &board,int r,int n,vector<vector<string>>& ans){
-        if(r==n){
+    void solve(int clm, vector<string>& board, vector<vector<string>>& ans, int n){
+        if(clm == n){
             ans.push_back(board);
             return;
         }
-
-        for(int i=0;i<n;i++){
-            if(issafe(board,r,i,n)){
-                board[r][i] = 'Q';
-                nqueens(board,r+1,n,ans);
-                board[r][i] = '.';
+        
+        for(int row=0;row<n;row++){
+            if(issafe(row,clm,board,n)){
+                board[row][clm] = 'Q';
+                solve(clm+1,board,ans,n);
+                board[row][clm] = '.';
             }
         }
     }
+
     vector<vector<string>> solveNQueens(int n) {
-        vector<string> board(n,string(n,'.'));
         vector<vector<string>> ans;
-        nqueens(board,0,n,ans);
+        vector<string> board(n);
+        string s(n,'.');
+        for(int i=0;i<n;i++){
+            board[i] = s;
+        }
+        solve(0,board,ans,n);
         return ans;
     }
 };
