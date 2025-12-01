@@ -1,34 +1,28 @@
 class Solution {
 public:
-    bool ispalin(string s){
-        string s2 = s;
-        reverse(s2.begin(),s2.end());
-        
-        return s2==s;
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> ans;
+        vector<string> path;
+        func(0,s,path,ans);
+        return ans;
     }
-
-    void getprt(string s, vector<string> &partition, vector<vector<string>> &ans) {
-        
-        if(s.size()==0){
-            ans.push_back(partition);
+    void func(int idx, string s, vector<string>& path,vector<vector<string>>& ans){
+        if(idx==s.size()){
+            ans.push_back(path);
             return;
         }
-
-        for(int i=0;i<s.size();i++){
-            string part = s.substr(0,i+1);
-            if(ispalin(part)){
-                partition.push_back(part);
-                getprt(s.substr(i+1),partition,ans);
-                partition.pop_back();
+        for(int i=idx;i<s.size();i++){
+            if(ispalin(s,idx,i)){
+                path.push_back(s.substr(idx,i-idx+1));
+                func(i+1,s,path,ans);
+                path.pop_back();
             }
         }
-        
     }
-
-    vector<vector<string>> partition(string s){
-        vector<vector<string>> ans;
-        vector<string> partition;
-        getprt(s,partition,ans);
-        return ans;
+    bool ispalin(string s,int start,int end){
+        while(start<=end){
+            if(s[start++]!=s[end--]) return false;
+        }
+        return true;
     }
 };
