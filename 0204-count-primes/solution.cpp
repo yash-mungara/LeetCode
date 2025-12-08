@@ -1,18 +1,14 @@
 class Solution {
 public:
     int countPrimes(int n) {
-        vector<bool> isprime(n+1,true);
-        int count = 0;
-
-        for(int i=2;i<n;i++){
-            if(isprime[i]){
-                count++;
-            
-            for(int j=2*i;j<n;j+=i){
-                isprime[j]=false;
+        vector<int>isPrime(max(2, n ), 1); int primes(0);
+        isPrime[0] = isPrime[1] = 0;
+        for (int i = 2; i < n; i++) {
+            if (isPrime[i]) {
+                primes++;
+                for (int j = i; j < n; j += i)isPrime[j] = 0;
             }
-            }
-        } 
-        return count;
+        }
+        return primes;
     }
 };
