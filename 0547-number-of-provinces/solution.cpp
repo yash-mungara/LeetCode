@@ -1,32 +1,53 @@
 class Solution {
 public:
-    void helper(vector<vector<int>> &adjls, int i, vector<int> &vis){
-        vis[i] = 1;
-        for(auto it : adjls[i]){
-            if(!vis[it]) helper(adjls,it,vis);
+    void dfs(vector<vector<int>> &adj, vector<int> &vis, int v){
+        vis[v] = 1;
+
+        for(int u:adj[v]){
+            if(!vis[u]){dfs(adj,vis,u);}
         }
     }
     int findCircleNum(vector<vector<int>>& isConnected) {
-        int n=isConnected.size();
-        vector<vector<int>> adjls(n);
+        int n = isConnected.size();
+        vector<vector<int>> adj(n);
+        vector<int> vis(n,0);
+        int ans = 0;
+        //creating adjlist 
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(isConnected[i][j] && i!=j){
+                    adj[i].push_back(j);
+                }
+            }
+        }
 
-            for(int i=0;i<isConnected.size();i++){
-                for(int j=0;j<isConnected[0].size();j++){
-                    if(isConnected[i][j]==1 && i!=j){
-                        adjls[i].push_back(j);
-                        adjls[j].push_back(i);
-                    }
-                }
-            }
+    /*    for(int i=0;i<n;i++){
+            if(vis[i]) continue;            DFS
+            ans++;
+            dfs(adj,vis,i);
+        }
+    */
+
         
-        vector<int> vis(adjls.size(),0);
-        int cnt=0;
-            for(int i=0;i<adjls.size();i++){
-                if(vis[i]==0){
-                    cnt++;
-                    helper(adjls,i,vis);
+
+        for(int i=0;i<n;i++){
+            if(vis[i]) continue;
+            queue<int> q;
+            vis[i] = 1;
+            q.push(i);
+            ans++;
+            while(!q.empty()){
+            int node = q.front();
+            q.pop();
+
+            for(int u:adj[node]){
+                if(!vis[u]) {
+                    vis[u] = 1;
+                    q.push(u);
                 }
             }
-        return cnt;
+        }
+        }
+        return ans;
     }
 };
