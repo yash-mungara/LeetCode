@@ -1,33 +1,65 @@
 class Solution {
 public:
-    vector<int> findOrder(int V, vector<vector<int>>& crs) {
-        vector<vector<int>> adj(V);
-        stack<int> st;
-        vector<int> indg(V,0);
+    // bool dfs(vector<vector<int>>& adj, vector<int> &vis, vector<int> &ans, int i){
+    //     vis[i]=1;
+
+    //     for(int neb : adj[i]){
+    //         if(vis[neb]==1) return true;    
+
+    //         if(vis[neb]==0) {
+    //             if(dfs(adj, vis, ans, neb)) return true;
+    //         }
+    //     }
+
+    //     vis[i] = 2;
+    //     ans.push_back(i);
+    //     return false;
+    // }
+    // vector<int> findOrder(int n, vector<vector<int>>& list) {
+    //     vector<vector<int>> adj(n);
+    //     vector<int> vis(n,0);
+    //     stack<int> st;
+    //     vector<int> ans;
+    //     for(auto x:list){
+    //         adj[x[1]].push_back(x[0]);
+    //     }
+
+    //     for(int i=0;i<n;i++){
+    //         if(vis[i]==0) {
+    //             if(dfs(adj, vis, ans, i)) return {};
+    //         }
+    //     }
+    //     reverse(ans.begin(),ans.end());
+    //     return ans;
+    // }
+    vector<int> findOrder(int n, vector<vector<int>>& list) {
+        vector<int> vis(n,0);
+        vector<vector<int>> adj(n);
+        queue<int> q;
         vector<int> ans;
-
-        for(int i=0;i<crs.size();i++){
-            adj[crs[i][1]].push_back(crs[i][0]);
+        for(auto x:list){
+            adj[x[1]].push_back(x[0]);
+            vis[x[0]]++;
         }
-
-        for(auto x:adj){for(auto y:x){indg[y]++;}}
-
-        for(int i=0;i<indg.size();i++){
-            if(indg[i]==0) st.push(i);
-        }
-
-        while(!st.empty()){
-            int node = st.top();
-            ans.push_back(node);
-            st.pop();
-            for(int i=0;i<adj[node].size();i++){
-                indg[adj[node][i]]--;
-                if(indg[adj[node][i]]==0){
-                    st.push(adj[node][i]);
-                }
+        
+        for(int i=0;i<n;i++){
+            if(vis[i]==0) {
+                q.push(i);
             }
         }
-        if(ans.size()!=V) return {};
+
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+
+            for(int neb: adj[node]){
+                vis[neb]--;
+                if(vis[neb]==0) q.push(neb);
+            }
+            ans.push_back(node);
+        }
+        // reverse(ans.begin(),ans.end());
+        if(ans.size()!=n) return {};
         return ans;
     }
 };
