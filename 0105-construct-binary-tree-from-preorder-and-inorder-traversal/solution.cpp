@@ -11,27 +11,27 @@
  */
 class Solution {
 public:
-    int search(vector<int>& inorder, int left, int right, int val){
-        for(int i=left;i<=right;i++){
-            if(inorder[i]==val)return i;
-        }
-        return -1;
-    };
-    TreeNode* helper(vector<int>& preorder, vector<int>& inorder, int &preIdx, int left, int right){
-        if(left>right) return NULL;
-        TreeNode* root = new TreeNode(preorder[preIdx]);
-        
-
-        int inIdx = search(inorder,left,right,preorder[preIdx]);
-        preIdx++;
-        
-        root->left = helper(preorder,inorder,preIdx,left,inIdx-1);
-        root->right = helper(preorder,inorder,preIdx,inIdx+1,right);
-
-        return root;
-    }
+    map<int, int> m;
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        int preIdx = 0;
-        return helper(preorder,inorder,preIdx,0,inorder.size()-1);
+        
+        for(int i=0;i<inorder.size();i++){
+            m[inorder[i]] = i;
+        }
+
+        TreeNode* node = helper(preorder, 0, preorder.size()-1, inorder, 0, inorder.size());
+
+        return node;
+    }
+    TreeNode* helper(vector<int> & preorder, int prest, int preend, vector<int>& inorder, int inst, int inend){
+        if(prest>preend || inst>inend) return NULL;
+        TreeNode* node = new TreeNode(preorder[prest]);
+
+        int data = m[node->val];
+        int numsleft = data-inst;
+
+        node->left = helper(preorder, prest+1, prest+numsleft, inorder, inst, data-1);
+        node->right = helper(preorder, prest+numsleft+1, preend, inorder, data+1, inend);
+
+        return node;
     }
 };
