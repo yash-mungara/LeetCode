@@ -1,27 +1,24 @@
 class Solution {
 public:
-    void nextPermutation(vector<int>& a) {
-        //find pivot
-        int pivot = -1, n=a.size();
+    void nextPermutation(vector<int>& nums) {
+        int n=nums.size();
+        int idx = -1;
 
-        for(int i=n-2;i>=0;i--){
-            if(a[i]<a[i+1]){
-                pivot = i;
+        for(int i=n-1;i>0;i--){
+            if(nums[i-1]<nums[i]){
+                idx = i-1;
                 break;
             }
         }
-        if(pivot==-1) {reverse(a.begin(),a.end());
-            return;}
-
-        //next element
-        for(int i=n-1;i>pivot;i--){
-            if(a[i]>a[pivot]){
-                swap(a[i],a[pivot]);
-                break;
+        if(idx==-1){reverse(nums.begin(), nums.end()); return;}
+        int mini = idx+1;
+        for(int i=idx+2;i<n;i++){
+            if(nums[idx]<nums[i] && nums[i]<nums[mini]){
+                mini = i;
             }
         }
-
-        reverse(a.begin() + pivot + 1,a.end());
+        swap(nums[idx],nums[mini]);
+        sort(nums.begin()+idx+1,nums.end());
         return;
     }
 };
