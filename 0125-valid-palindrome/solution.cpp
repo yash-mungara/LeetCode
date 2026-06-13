@@ -1,16 +1,17 @@
 class Solution {
 public:
-    bool isalpha(char a){
-        if((a>='0'&&a<='9') || (a>='a'&& a<='z') || (a>='A' && a<='Z')) return true;
-        else return false;
+    bool isalpha(char c){
+        return (c>='A' && c<='Z') || (c>='a' && c<='z') || (c>='0' && c<='9') ;
     }
     bool isPalindrome(string s) {
-        int st = 0, end = s.size()-1;
-        while(st<end){
-            if(!isalpha(s[st])){st++;continue;}
-            if(!isalpha(s[end])){end--;continue;}
-            if(tolower(s[st])!=tolower(s[end])){return false;}
-            st++;end--;
+        int i=0, j=s.size()-1;
+
+        while(i<j){
+            while((i<s.size() && j>=0) && !isalpha(s[i])) i++;
+            while((i<s.size() && j>=0) && !isalpha(s[j])) j--;
+            if(i>=s.size() || j<0) break;
+            if(s[i]!=s[j] && tolower(s[i])!=tolower(s[j])) return false;
+            i++;j--;
         }
         return true;
     }
