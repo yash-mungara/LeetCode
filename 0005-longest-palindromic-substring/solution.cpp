@@ -1,34 +1,43 @@
 class Solution {
 public:
     string longestPalindrome(string s) {
-        int n = s.size();
-        if (n <= 1) return s;
+        string t = "#";
+        for(char c : s) {
+            t += c;
+            t += '#';
+        }
 
-        string ans = "";
+        int n = t.size();
+        vector<int> p(n, 0);
 
-        for (int i = 0; i < n; i++) {
-            // Odd length palindrome (center = i)
-            int low = i, high = i;
-            while (low >= 0 && high < n && s[low] == s[high]) {
-                if (high - low + 1 > ans.size()) {
-                    ans = s.substr(low, high - low + 1);
-                }
-                low--;
-                high++;
+        int center = 0, right = 0;
+        int maxLen = 0, centerIdx = 0;
+
+        for(int i = 0; i < n; i++) {
+
+            if(i < right) {
+                int mirror = 2 * center - i;
+                p[i] = min(right - i, p[mirror]);
             }
 
-            // Even length palindrome (center between i and i+1)
-            low = i; high = i + 1;
-            while (low >= 0 && high < n && s[low] == s[high]) {
-                if (high - low + 1 > ans.size()) {
-                    ans = s.substr(low, high - low + 1);
-                }
-                low--;
-                high++;
+            while(i - p[i] - 1 >= 0 &&
+                  i + p[i] + 1 < n &&
+                  t[i - p[i] - 1] == t[i + p[i] + 1]) {
+                p[i]++;
+            }
+
+            if(i + p[i] > right) {
+                center = i;
+                right = i + p[i];
+            }
+
+            if(p[i] > maxLen) {
+                maxLen = p[i];
+                centerIdx = i;
             }
         }
 
-        return ans;
+        int start = (centerIdx - maxLen) / 2;
+        return s.substr(start, maxLen);
     }
 };
-
