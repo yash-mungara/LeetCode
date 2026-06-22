@@ -1,30 +1,28 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        int l=0, r=0, cnt=0, m=s.size(), n=t.size(), len=INT_MAX;
-        int arr[256] = {0};
-        int st=0;
-        for(int i=0;i<n;i++) arr[t[i]-'A']++;
-
-        while(r<m){
-            arr[s[r]-'A']--;
-            if(arr[s[r]-'A']>=0) cnt++;
-
-            if(cnt==n){
-                while(l<m && cnt==n){
-                    int temp= r-l+1;
-                    if(temp<len){
-                        len=temp;
-                        st=l;
-                    }
-                    arr[s[l]-'A']++;
-                    if(arr[s[l]-'A']>0) cnt--;
-                    l++;
-                }
-            }
-            r++;
+        unordered_map<char,int> m;
+        int st=-1, l=0, len=INT_MAX, req = t.size(); 
+        for(auto it:t){
+            m[it]++;
         }
-        if(len==INT_MAX) return "";
-        return s.substr(st,len);    
+
+        for(int i=0;i<s.size();i++){
+            if(m[s[i]]>0) req--;
+            m[s[i]]--;
+
+            while(req==0){
+                if(i-l+1<len){
+                    len = i-l+1;
+                    st = l;
+                } 
+
+                m[s[l]]++;
+                if(m[s[l]]>0) req++;
+                l++;
+            }
+        }
+
+        return st == -1 ? "" : s.substr(st, len);
     }
 };
