@@ -1,27 +1,38 @@
 class Solution {
 public:
-    bool helper(int i,int j,int m,int n,vector<vector<char>>& board, string word,int k){
-        if(k==word.size()) return true;
-        if(i<0 || j<0 || j==n || i==m || board[i][j]!=word[k]) return false;
-        board[i][j] = '#';
-        bool a = helper(i+1,j,m,n,board,word,k+1);
-        bool b = helper(i-1,j,m,n,board,word,k+1);
-        bool c = helper(i,j+1,m,n,board,word,k+1);
-        bool d = helper(i,j-1,m,n,board,word,k+1);
-        board[i][j] = word[k];
-        return a || b || c || d;
+    vector<int> r = {0,1,0,-1}, c = {1,0,-1,0};
+    bool isvalid(int i, int j, int n, int m){
+        return i>=0 && i<n && j>=0 && j<m;
     }
-    bool exist(vector<vector<char>>& board, string word) {
-        int m= board.size();
-        int n= board[0].size();
+    bool dfs(vector<vector<char>>& board, int i, int j, int idx, string &word){
+        if(idx==word.size()-1) return true;
+        char temp = board[i][j];
+        board[i][j] = '#';
 
-        for(int i=0;i<m;i++){
-            for(int j=0;j<n;j++){
-                if(word[0]==board[i][j]){
-                    if(helper(i,j,m,n,board,word,0)) return true;
+        for(int k=0;k<4;k++){
+            int nr = i+r[k], nc = j+c[k];
+            if(isvalid(nr,nc,board.size(), board[0].size()) && word[idx+1]==board[nr][nc]){
+                if(dfs(board, nr,nc, idx+1, word)){
+                    board[i][j] = temp;
+                    return true;
                 }
             }
         }
+
+        board[i][j] = temp;
+        return false;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        int n = board.size(), m=board[0].size();
+        bool ans = false;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(board[i][j] == word[0]){
+                    if(dfs(board, i, j, 0, word)) return true;
+                }
+            }
+        }
+
         return false;
     }
 };
